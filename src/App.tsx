@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 // Modules
 import {
   BrowserRouter as Router,
@@ -26,7 +28,6 @@ export default function App() {
   //
   const cookies_keys =
     cookies && typeof cookies == "object" && Object.keys(cookies);
-  console.log(typeof cookies, cookies_keys.length, cookies);
 
   //
   return (

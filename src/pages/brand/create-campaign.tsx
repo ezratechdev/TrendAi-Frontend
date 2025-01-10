@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
+
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { ToastContainer, toast } from 'react-toastify';
@@ -33,8 +34,6 @@ export default function CreateCampaign() {
   // Get authenication cookie
   const [cookies] = useCookies(["authentication"]);
 
-  console.log(cookies)
-
   function createCampaign(e: React.FormEvent<HTMLFormElement>){
     e.preventDefault();
     no_authenication_axios_instance.post('/brand/create-campaign', {
@@ -45,9 +44,8 @@ export default function CreateCampaign() {
             'Authorization': `Bearer ${cookies.authenication.token}`,
         }
     })
-    .then(function(response){
+    .then(function(){
         // add campaign to list
-        console.log(response.data);
         setName('');
         setDescription('');
         getCampaigns();
