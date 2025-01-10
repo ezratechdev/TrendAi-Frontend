@@ -1,24 +1,56 @@
-import logo from "../../public/favicon.ico";
+// Modules
+import React, { useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
+import { useCookies } from 'react-cookie';
 
-export default function Register() {
+import { no_authenication_axios_instance } from "../functions/axios";
+
+//Split signup into two
+
+export default function RegisterInfluencer() {
+  // States
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  // End of states
+
+  // Cookies
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [cookies, setCookie, removeCookie] = useCookies(['authenication']);
+
+
+  /**
+   * FUNCTIONS
+   */
+  function registerInfluencer(e: React.FormEvent<HTMLFormElement>){
+    e.preventDefault();
+    no_authenication_axios_instance.post('/authenication/signup',{
+        email,
+        username,
+        password,
+        role:"influencer",
+    })
+    .then(function(response){
+      // 
+      console.log(response.data)
+      // Store Sesssion Cookie
+      setCookie('authenication', response.data.token, { path:'/' });
+    })
+    .catch(function(er){
+      toast.error(er.message)
+    })
+  }
+
   return (
     <div className="bg-gray-50 font-[sans-serif]">
       <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
         <div className="max-w-md w-full">
-          <a href="https://www.trendai.app/">
-            <img
-              src={logo}
-              alt="logo"
-              content={"cover"}
-              className="w-40 mb-8 mx-auto block"
-            />
-          </a>
 
           <div className="p-8 rounded-2xl bg-white shadow">
             <h2 className="text-gray-800 text-center text-2xl font-bold">
-              Register
+              Register as an Influencer
             </h2>
-            <form className="mt-8 space-y-4">
+            <form className="mt-8 space-y-4" onSubmit={registerInfluencer}>
               <div>
                 <label className="text-gray-800 text-sm mb-2 block">
                   User name
@@ -29,7 +61,9 @@ export default function Register() {
                     type="text"
                     required
                     className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                    placeholder="Enter user name"
+                    placeholder="Enter username"
+                    value={username}
+                    onChange={char => setUsername(char.target.value)}
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -62,6 +96,8 @@ export default function Register() {
                     required
                     className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                     placeholder="Enter Email"
+                    value={email}
+                    onChange={char => setEmail(char.target.value)}
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -96,6 +132,8 @@ export default function Register() {
                     required
                     className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                     placeholder="Enter password"
+                    value={password}
+                    onChange={char => setPassword(char.target.value)}
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -114,7 +152,7 @@ export default function Register() {
 
               <div className="!mt-8">
                 <button
-                  type="button"
+                  type="submit"
                   className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
                 >
                   Register
@@ -133,6 +171,7 @@ export default function Register() {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 }

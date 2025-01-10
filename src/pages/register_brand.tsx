@@ -7,9 +7,10 @@ import { no_authenication_axios_instance } from "../functions/axios";
 
 //Split signup into two
 
-export default function RegisterInfluencer() {
+export default function RegisterBrand() {
   // States
-  const [identifier, setIdentifier] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   // End of states
 
@@ -21,16 +22,15 @@ export default function RegisterInfluencer() {
   /**
    * FUNCTIONS
    */
-  function registerInfluencer(e: React.FormEvent<HTMLFormElement>){
+  function registerBrand(e: React.FormEvent<HTMLFormElement>){
     e.preventDefault();
-    no_authenication_axios_instance.post('/authenication/login',{
-        ...identifier.includes('@') && {email: identifier},
-        ...!(identifier.includes('@')) && {username: identifier},
+    no_authenication_axios_instance.post('/authenication/signup',{
+        email,
+        username,
         password,
+        role:"brand",
     })
     .then(function(response){
-      // 
-      console.log(response.data)
       // Store Sesssion Cookie
       setCookie('authenication', response.data.token, { path:'/' });
     })
@@ -46,12 +46,12 @@ export default function RegisterInfluencer() {
 
           <div className="p-8 rounded-2xl bg-white shadow">
             <h2 className="text-gray-800 text-center text-2xl font-bold">
-              Login
+              Register as a brand
             </h2>
-            <form className="mt-8 space-y-4" onSubmit={registerInfluencer}>
+            <form className="mt-8 space-y-4" onSubmit={registerBrand}>
               <div>
                 <label className="text-gray-800 text-sm mb-2 block">
-                  Email/Username
+                  User name
                 </label>
                 <div className="relative flex items-center">
                   <input
@@ -59,9 +59,9 @@ export default function RegisterInfluencer() {
                     type="text"
                     required
                     className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
-                    placeholder=""
-                    value={identifier}
-                    onChange={char => setIdentifier(char.target.value)}
+                    placeholder="Enter username"
+                    value={username}
+                    onChange={char => setUsername(char.target.value)}
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -82,6 +82,41 @@ export default function RegisterInfluencer() {
                     ></path>
                   </svg>
                 </div>
+
+                {/* Email comes here */}
+                <label className="text-gray-800 text-sm mb-2 block">
+                  Email
+                </label>
+                <div className="relative flex items-center">
+                  <input
+                    name="email"
+                    type="email"
+                    required
+                    className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
+                    placeholder="Enter Email"
+                    value={email}
+                    onChange={char => setEmail(char.target.value)}
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="#bbb"
+                    stroke="#bbb"
+                    className="w-4 h-4 absolute right-4"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      cx="10"
+                      cy="7"
+                      r="6"
+                      data-original="#000000"
+                    ></circle>
+                    <path
+                      d="M14 15H6a5 5 0 0 0-5 5 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 5 5 0 0 0-5-5zm8-4h-2.59l.3-.29a1 1 0 0 0-1.42-1.42l-2 2a1 1 0 0 0 0 1.42l2 2a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42l-.3-.29H22a1 1 0 0 0 0-2z"
+                      data-original="#000000"
+                    ></path>
+                  </svg>
+                </div>
+                {/* End of email */}
               </div>
 
               <div>
@@ -122,12 +157,12 @@ export default function RegisterInfluencer() {
                 </button>
               </div>
               <p className="text-gray-800 text-sm !mt-8 text-center">
-                Don't have an account?{" "}
+                Already have an account?{" "}
                 <a
                   href="javascript:void(0);"
                   className="text-blue-600 hover:underline ml-1 whitespace-nowrap font-semibold"
                 >
-                  Register here
+                  Login here
                 </a>
               </p>
             </form>

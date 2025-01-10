@@ -1,12 +1,12 @@
 import './App.css';
 import Login from './pages/login';
-import Register from './pages/register';
+import RegisterInfluencer from './pages/register_influencer';
+import RegisterBrand from './pages/register_brand';
 
 
 
 function App() {
-
-  return <Register />
+  return <Login />
 }
 
 export default App
