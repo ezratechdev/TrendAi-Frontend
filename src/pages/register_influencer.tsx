@@ -34,7 +34,6 @@ export default function RegisterInfluencer() {
     })
     .then(function(response){
       // 
-      console.log(response.data)
       // Store Sesssion Cookie
       setCookie('authenication', {
         token:response.data.token,

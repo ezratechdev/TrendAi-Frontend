@@ -1,4 +1,6 @@
-import { useState } from "react";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { ToastContainer, toast } from 'react-toastify';
 import { no_authenication_axios_instance } from "../../functions/axios";
@@ -6,10 +8,27 @@ import { no_authenication_axios_instance } from "../../functions/axios";
 
 
 export default function CreateCampaign() {
-  const [tasks, setTasks] = useState([]);
-
+  const [campaigns, setCampaigns] = useState([]);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  // Component Did Mount
+  useEffect(function(){
+    getCampaigns();
+  }, []);
+  function getCampaigns(){
+    no_authenication_axios_instance.get('/brand/get-campaigns',{
+        headers: {
+            'Authorization': `Bearer ${cookies.authenication.token}`,
+        }
+    })
+    .then(function(response){
+        // add campaign to list
+        setCampaigns(response.data.campaigns);
+    })
+    .catch(function(er){
+      toast.error(er.message);
+    })
+  }
 
   // Get authenication cookie
   const [cookies] = useCookies(["authentication"]);
@@ -29,6 +48,9 @@ export default function CreateCampaign() {
     .then(function(response){
         // add campaign to list
         console.log(response.data);
+        setName('');
+        setDescription('');
+        getCampaigns();
     })
     .catch(function(er){
       toast.error(er.message);
@@ -64,21 +86,17 @@ export default function CreateCampaign() {
         </button>
       </form>
       <ul>
-        {tasks.map((task, index) => (
+        {campaigns.map((campaign, index) => (
           <li key={index} className="flex justify-between items-center mb-2">
-            {/* <span
-              className={`flex-1 ${
-                task.completed ? "line-through text-gray-500" : ""
-              }`}
-              onClick={() => toggleTaskCompletion(index)}
+            <span
             >
-              {task.text}
-            </span> */}
+              {campaign.name}
+            </span>
             <button
               //   onClick={() => deleteTask(index)}
               className="ml-4 p-1 bg-red-500 text-white rounded hover:bg-red-600"
             >
-              Delete
+              View
             </button>
           </li>
         ))}
