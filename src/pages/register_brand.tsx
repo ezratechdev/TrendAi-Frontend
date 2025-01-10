@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useCookies } from 'react-cookie';
+import { useNavigate } from "react-router-dom";
 
 import { no_authenication_axios_instance } from "../functions/axios";
 
@@ -13,6 +14,7 @@ export default function RegisterBrand() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   // End of states
+  const navigate = useNavigate();
 
   // Cookies
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -36,6 +38,7 @@ export default function RegisterBrand() {
         token:response.data.token,
         user:`${response.data.operarion}`.includes('influencer') ? 'influencer' : 'brand',
       }, { path:'/' });
+      window.location.href = "/";
     })
     .catch(function(er){
       toast.error(er.message)
@@ -162,7 +165,10 @@ export default function RegisterBrand() {
               <p className="text-gray-800 text-sm !mt-8 text-center">
                 Already have an account?{" "}
                 <a
-                  href="javascript:void(0);"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate('/');
+                  }}
                   className="text-blue-600 hover:underline ml-1 whitespace-nowrap font-semibold"
                 >
                   Login here

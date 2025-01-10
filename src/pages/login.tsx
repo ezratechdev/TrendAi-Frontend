@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { useCookies } from 'react-cookie';
+import { useNavigate } from "react-router-dom";
 
 import { no_authenication_axios_instance } from "../functions/axios";
 
@@ -12,6 +13,7 @@ export default function RegisterInfluencer() {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   // End of states
+  const navigate = useNavigate();
 
   // Cookies
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -29,16 +31,16 @@ export default function RegisterInfluencer() {
         password,
     })
     .then(function(response){
-      // 
-      console.log(response.data)
       // Store Sesssion Cookie
       setCookie('authenication', {
         token:response.data.token,
         user:`${response.data.operarion}`.includes('influencer') ? 'influencer' : 'brand',
       }, { path:'/' });
+      // Refresh the page after the token is saved so as to be able to navigate to the home pae
+      window.location.reload();
     })
     .catch(function(er){
-      toast.error(er.message)
+      toast.error(er.message);
     })
   }
 
@@ -121,16 +123,29 @@ export default function RegisterInfluencer() {
                   type="submit"
                   className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
                 >
-                  Register
+                  Login
                 </button>
               </div>
               <p className="text-gray-800 text-sm !mt-8 text-center">
                 Don't have an account?{" "}
                 <a
-                  href="javascript:void(0);"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate('/register-brand');
+                  }}
                   className="text-blue-600 hover:underline ml-1 whitespace-nowrap font-semibold"
                 >
-                  Register here
+                  Register as a brand
+                </a>
+                <br />
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate('/register-influencer');
+                  }}
+                  className="text-blue-600 hover:underline ml-1 whitespace-nowrap font-semibold"
+                >
+                  Register as an influencer
                 </a>
               </p>
             </form>

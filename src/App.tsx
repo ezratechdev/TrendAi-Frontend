@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
 } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
@@ -11,14 +10,14 @@ import "./App.css";
 import Login from "./pages/login";
 import RegisterInfluencer from "./pages/register_influencer";
 import RegisterBrand from "./pages/register_brand";
+import CreateCampaign from "./pages/brand/create-campaign";
 
 const Home = () => {
-  return (
-    <>
-      <p>Home</p>
-    </>
-  );
-};
+  return(
+    <p>Home</p>
+  )
+}
+
 
 export default function App() {
   // Check for authenication cookie
@@ -27,7 +26,7 @@ export default function App() {
   //
   const cookies_keys =
     cookies && typeof cookies == "object" && Object.keys(cookies);
-  console.log(typeof cookies, cookies_keys);
+  console.log(typeof cookies, cookies_keys.length, cookies);
 
   //
   return (
@@ -35,31 +34,24 @@ export default function App() {
       {cookies_keys.length == 0 ? (
         <Routes>
           {/* Public Routes */}
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/register-influencer" element={<RegisterInfluencer />} />
           <Route path="/register-brand" element={<RegisterBrand />} />
         </Routes>
       ) : (
         <Routes>
           {/* Private Routes */}
-
+          {
+            cookies && cookies.authenication && Object.keys(cookies.authenication).length > 0 && cookies.authenication.user == "brand"
+            ?
+            <Route path="/" element={<CreateCampaign />} />
+            :
+            <Route path="/" element={<Home />} />
+          }
           {/* Integrate brand */}
-          <Route path="/" element={<Home />} />
           {/* Integrate influencer route */}
         </Routes>
       )}
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register-influencer" element={<RegisterInfluencer />} />
-        <Route path="/register-brand" element={<RegisterBrand />} />
-
-        {/* Private Routes */}
-        {/* <Route
-          path="/"
-          element={isLoggedIn ? <Home /> : <Navigate to="/login" replace />}
-        /> */}
-      </Routes>
     </Router>
   );
 }
