@@ -32,7 +32,10 @@ export default function RegisterInfluencer() {
       // 
       console.log(response.data)
       // Store Sesssion Cookie
-      setCookie('authenication', response.data.token, { path:'/' });
+      setCookie('authenication', {
+        token:response.data.token,
+        user:`${response.data.operarion}`.includes('influencer') ? 'influencer' : 'brand',
+      }, { path:'/' });
     })
     .catch(function(er){
       toast.error(er.message)
