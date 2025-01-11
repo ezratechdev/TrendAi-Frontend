@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 
@@ -12,10 +13,14 @@ export default function CreateCampaign() {
   const [campaigns, setCampaigns] = useState([]);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+
+  // Get authenication cookie
+  const [cookies, setCookie, removeCookie] = useCookies(["authentication"]);
   // Component Did Mount
   useEffect(function(){
     getCampaigns();
   }, []);
+
   function getCampaigns(){
     no_authenication_axios_instance.get('/brand/get-campaigns',{
         headers: {
@@ -27,12 +32,17 @@ export default function CreateCampaign() {
         setCampaigns(response.data.campaigns);
     })
     .catch(function(er){
+      console.log("Cookies before deletion:", document.cookie);
+      // redirect to login page
+      // Delete the cookie
+      document.cookie = "authenication=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;";
+      window.location.href = "/";
+      console.log("Cookies after deletion:", document.cookie);
       toast.error(er.message);
     })
   }
 
-  // Get authenication cookie
-  const [cookies] = useCookies(["authentication"]);
+  
 
   function createCampaign(e: React.FormEvent<HTMLFormElement>){
     e.preventDefault();
@@ -42,6 +52,7 @@ export default function CreateCampaign() {
     },{
         headers: {
             'Authorization': `Bearer ${cookies.authenication.token}`,
+            "Content-Type":"application/json",
         }
     })
     .then(function(){
